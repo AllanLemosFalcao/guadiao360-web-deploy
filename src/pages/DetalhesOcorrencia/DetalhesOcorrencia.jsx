@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import styles from './detalhes.module.css'; // Importa os estilos modulares locais
+import styles from './Detalhes.module.css'; // Importa os estilos modulares locais
 import '../../styles/global.css'; // Importa estilos de layout global
 
 // Dados mockados (inicial)

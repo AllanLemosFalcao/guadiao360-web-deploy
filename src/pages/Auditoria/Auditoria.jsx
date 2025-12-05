@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import MainHeader from '../../components/Header/MainHeader';
-import styles from './auditoria.module.css';
+import styles from './Auditoria.module.css';
 import '../../styles/global.css';
 
 const Auditoria = () => {

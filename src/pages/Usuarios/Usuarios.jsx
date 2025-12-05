@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import MainHeader from '../../components/Header/MainHeader';
-import styles from './usuarios.module.css';
+import styles from './Usuarios.module.css';
 import '../../styles/global.css';
 
 const Usuarios = () => {

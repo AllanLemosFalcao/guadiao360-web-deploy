@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import MainHeader from '../../components/Header/MainHeader';
-import styles from './relatorios.module.css';
+import styles from './Relatorios.module.css';
 import '../../styles/global.css';
 
 // Função auxiliar para formatar tempo (ex: 75.5 -> 1h 16m)
@@ -24,7 +24,7 @@ const Relatorios = () => {
     // 2. Estado para a tabela de resumo
     const [summaryData, setSummaryData] = useState([]); 
 
-    const API_URL = 'http://localhost:3001';
+    const API_URL = `${API_URL}`;
 
     // 3. Função para buscar os dados da Tabela (Visualização)
     const handleGerarRelatorio = () => {
