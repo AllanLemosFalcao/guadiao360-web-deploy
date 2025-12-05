@@ -5,6 +5,9 @@ import MainHeader from '../../components/Header/MainHeader';
 import styles from './Relatorios.module.css';
 import '../../styles/global.css';
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
+
 // Função auxiliar para formatar tempo (ex: 75.5 -> 1h 16m)
 const formatarTempoMedio = (minutos) => {
     if (!minutos) return "N/A";

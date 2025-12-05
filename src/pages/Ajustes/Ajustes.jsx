@@ -4,6 +4,8 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import styles from './Ajustes.module.css';
 import '../../styles/global.css'; // Importação correta (global, sem atribuição)
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Ajustes = () => {
     return (
         <div className="dashboardContainer">

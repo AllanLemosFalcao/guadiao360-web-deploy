@@ -5,6 +5,9 @@ import MainHeader from '../../components/Header/MainHeader';
 import styles from './Dashboard.module.css';
 import '../../styles/global.css';
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
+
 const Dashboard = () => {
   // Estados para dados reais
   const [stats, setStats] = useState({ Total: 0, Aberto: 0, Pendente: 0, Andamento: 0, Concluído: 0, Cancelado: 0 });

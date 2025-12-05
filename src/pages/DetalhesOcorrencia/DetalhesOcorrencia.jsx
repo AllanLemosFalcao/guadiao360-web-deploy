@@ -5,6 +5,9 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import styles from './Detalhes.module.css'; // Importa os estilos modulares locais
 import '../../styles/global.css'; // Importa estilos de layout global
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
+
 // Dados mockados (inicial)
 const mockOccurrence = {
     id: '#2023-1254',

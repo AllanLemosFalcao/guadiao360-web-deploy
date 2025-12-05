@@ -6,6 +6,9 @@ import MainHeader from '../../components/Header/MainHeader';
 import styles from './Ocorrencias.module.css';
 import '../../styles/global.css';
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
+
 const getStatusClass = (status) => {
     switch (status) {
         case 'Concluído': return styles.statusConcluido;
