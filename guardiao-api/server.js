@@ -8,24 +8,34 @@ const fs = require('fs');
 const multer = require('multer');
 
 const app = express();
-const port = 3001;
+// RAILWAY: A porta é definida automaticamente pelo ambiente.
+const port = process.env.PORT || 3001;
 
 // --- CONFIGURAÇÕES DO SERVIDOR ---
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ 
+    // Aceita a URL do Vercel definida no .env ou libera tudo (*) para evitar erros iniciais
+    origin: process.env.FRONTEND_URL || '*' 
+}));
+
 app.use(express.json());
+// Nota: No Railway, arquivos estáticos (uploads) são apagados a cada reinício/deploy (Sistema Efêmero)
 app.use('/uploads', express.static('uploads'));
 
-// --- BANCO DE DADOS ---
+// --- BANCO DE DADOS (Configuração para Nuvem) ---
 const dbConnection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'admin', // Ajuste conforme sua senha local
-    database: 'gestao_usuarios_db'
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'admin',
+    database: process.env.DB_NAME || 'gestao_usuarios_db',
+    port: process.env.DB_PORT || 3306,
+    // Mantém a conexão viva para evitar quedas por inatividade ("Protocol_Connection_Lost")
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0
 });
 
 dbConnection.connect(err => {
     if (err) {
-        console.error('Erro ao conectar ao MySQL:', err.stack);
+        console.error('Erro CRÍTICO ao conectar ao MySQL:', err.stack);
         return;
     }
     console.log('Conectado ao MySQL com o ID ' + dbConnection.threadId);
@@ -47,6 +57,7 @@ const upload = multer({ storage: storage });
 
 // --- FUNÇÃO AUXILIAR DE AUDITORIA ---
 const registrarAuditoria = (evento, detalhes, usuarioEmail = 'Sistema') => {
+    // Em produção, idealmente pegamos o IP real do request, mas mantemos fixo para evitar erros agora
     const sql = "INSERT INTO tb_auditoria (evento_tipo, detalhes, usuario_email, ip_origem) VALUES (?, ?, ?, ?)";
     dbConnection.query(sql, [evento, detalhes, usuarioEmail, '127.0.0.1'], (err) => {
         if (err) console.error("Erro ao salvar auditoria:", err);
@@ -107,23 +118,15 @@ app.get('/api/ocorrencias/stats', (req, res) => {
     });
 });
 
+// 2. Ocorrências Recentes (Lista Lateral)
 app.get('/api/dashboard/recentes', (req, res) => {
-    // Adicionado 'icone_classe' para mostrar o ícone real (fogo, carro, etc)
+    // Mantida a versão com 'icone_classe' que é usada no frontend novo
     const sql = `
         SELECT id, tipo_ocorrencia, localizacao, status, data_hora, icone_classe 
         FROM tb_ocorrencias 
         ORDER BY data_hora DESC 
         LIMIT 3
     `;
-    dbConnection.query(sql, (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
-    });
-});
-
-// 2. Ocorrências Recentes (Lista Lateral)
-app.get('/api/dashboard/recentes', (req, res) => {
-    const sql = `SELECT id, tipo_ocorrencia, localizacao, status, data_hora FROM tb_ocorrencias ORDER BY data_hora DESC LIMIT 3`;
     dbConnection.query(sql, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
@@ -192,14 +195,16 @@ app.put('/api/ocorrencias/:id', (req, res) => {
     });
 });
 
-// Upload de Mídia (CORRIGIDO: 'tipo_midia')
+// Upload de Mídia
 app.post('/api/ocorrencias/:id/upload', upload.single('arquivo'), (req, res) => {
     const ocorrenciaId = req.params.id;
-    const tipo = req.body.tipo; // Recebe do front
+    const tipo = req.body.tipo;
     if (!req.file) return res.status(400).send("Nenhum arquivo enviado.");
     
-    const urlArquivo = `http://localhost:3001/uploads/${req.file.filename}`;
-    // Correção aqui: coluna do banco é 'tipo_midia', não 'tipo'
+    // No deploy, usamos o host dinâmico ou relativo
+    const baseUrl = process.env.BASE_URL || `http://localhost:${port}`;
+    const urlArquivo = `${baseUrl}/uploads/${req.file.filename}`;
+    
     const sql = "INSERT INTO ocorrencia_midias (ocorrencia_id, tipo_midia, nome_arquivo, url_arquivo) VALUES (?, ?, ?, ?)";
     
     dbConnection.query(sql, [ocorrenciaId, tipo, req.file.originalname, urlArquivo], (err, result) => {
