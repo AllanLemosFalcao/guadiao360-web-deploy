@@ -61,12 +61,12 @@ const Ocorrencias = () => {
             tableParams.append('dataFinal', fim);
         }
 
-        fetch(`http://localhost:3001/api/ocorrencias?${tableParams.toString()}`)
+        fetch(`${API_URL}/api/ocorrencias?${tableParams.toString()}`)
             .then(response => response.json())
             .then(data => setOccurrenceData(data))
             .catch(error => console.error("Erro ocorrencias:", error));
             
-        fetch(`http://localhost:3001/api/ocorrencias/stats?${statsParams.toString()}`)
+        fetch(`${API_URL}/api/ocorrencias/stats?${statsParams.toString()}`)
             .then(response => response.json())
             .then(data => setStatsData(data))
             .catch(error => console.error("Erro stats:", error));

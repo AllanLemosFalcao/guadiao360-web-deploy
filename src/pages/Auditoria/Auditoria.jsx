@@ -24,7 +24,7 @@ const Auditoria = () => {
         if (dataInicio) params.append('dataInicio', dataInicio);
         if (dataFinal) params.append('dataFinal', dataFinal);
         params.append('page', pageToFetch); 
-        fetch(`http://localhost:3001/api/auditoria?${params.toString()}`)
+        fetch(`${API_URL}/api/auditoria?${params.toString()}`)
             .then(response => response.json())
             .then(data => {
                 setLogData(data.data);

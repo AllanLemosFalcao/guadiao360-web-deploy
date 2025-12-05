@@ -42,8 +42,8 @@ const Usuarios = () => {
 
     const fetchSelects = async () => {
         try {
-            const resPerfis = await fetch('http://localhost:3001/api/perfis');
-            const resUnidades = await fetch('http://localhost:3001/api/unidades');
+            const resPerfis = await fetch(`${API_URL}/api/perfis`);
+            const resUnidades = await fetch(`${API_URL}/api/unidades`);
             setPerfis(await resPerfis.json());
             setUnidades(await resUnidades.json());
         } catch (error) { console.error("Erro ao carregar selects:", error); }
@@ -59,7 +59,7 @@ const Usuarios = () => {
         });
         
         try {
-            const response = await fetch(`http://localhost:3001/api/usuarios?${params.toString()}`);
+            const response = await fetch(`${API_URL}/api/usuarios?${params.toString()}`);
             const data = await response.json();
             setUsuarios(data.data);
             setTotalPages(data.pagination.totalPages);
@@ -73,7 +73,7 @@ const Usuarios = () => {
         if (!window.confirm("Tem certeza que deseja excluir este usuário?")) return;
         
         try {
-            await fetch(`http://localhost:3001/api/usuarios/${id}`, { method: 'DELETE' });
+            await fetch(`${API_URL}/api/usuarios/${id}`, { method: 'DELETE' });
             fetchUsuarios(currentPage); // Recarrega a tabela
         } catch (error) { console.error("Erro ao excluir:", error); }
     };
@@ -81,8 +81,8 @@ const Usuarios = () => {
     const handleSaveUser = async (e) => {
         e.preventDefault();
         const url = isEditing 
-            ? `http://localhost:3001/api/usuarios/${currentUser.id}` 
-            : 'http://localhost:3001/api/usuarios';
+            ? `${API_URL}/api/usuarios/${currentUser.id}` 
+            : `${API_URL}/api/usuarios`;
         
         const method = isEditing ? 'PUT' : 'POST';
 
