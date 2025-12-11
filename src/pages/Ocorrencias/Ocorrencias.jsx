@@ -6,8 +6,7 @@ import MainHeader from '../../components/Header/MainHeader';
 import styles from './Ocorrencias.module.css';
 import '../../styles/global.css';
 
-  const API_URL = import.meta.env.VITE_API_URL;
-
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getStatusClass = (status) => {
     switch (status) {
@@ -22,6 +21,7 @@ const getStatusClass = (status) => {
 
 const Ocorrencias = () => {
     const [occurrenceData, setOccurrenceData] = useState([]);
+    // Inicializamos o estado com todos os 5 status
     const [statsData, setStatsData] = useState({ Total: 0, Aberto: 0, Pendente: 0, Andamento: 0, Concluído: 0, Cancelado: 0 });
     
     // Filtros
@@ -136,15 +136,25 @@ const Ocorrencias = () => {
                     </button>
                 </section>
 
+                {/* --- SEÇÃO DE CARDS ATUALIZADA (5 Cards) --- */}
                 <section className={styles.statsSection}>
                     <div className={`${styles.statCard} ${styles.abertos}`}>
                         <span className={styles.count}>{statsData.Aberto}</span>
                         <span className={styles.label}>ABERTOS</span>
                     </div>
+                    
+                    {/* Alterado: Exibe apenas Pendente (sem somar) */}
                     <div className={`${styles.statCard} ${styles.pendentes}`}>
-                        <span className={styles.count}>{statsData.Pendente + statsData.Andamento}</span>
+                        <span className={styles.count}>{statsData.Pendente}</span>
                         <span className={styles.label}>PENDENTES</span>
                     </div>
+
+                    {/* Novo: Card Em Andamento */}
+                    <div className={`${styles.statCard} ${styles.andamento}`}>
+                        <span className={styles.count}>{statsData.Andamento}</span>
+                        <span className={styles.label}>EM ANDAMENTO</span>
+                    </div>
+                    
                     <div className={`${styles.statCard} ${styles.concluidos}`}>
                         <span className={styles.count}>{statsData.Concluído}</span>
                         <span className={styles.label}>CONCLUÍDOS</span>
@@ -161,7 +171,7 @@ const Ocorrencias = () => {
                             <tr>
                                 <th>ID</th>
                                 <th>Tipo de Ocorrências</th>
-                                <th>Data</th> {/* <--- NOVA COLUNA HEADER */}
+                                <th>Data</th>
                                 <th>Status</th>
                                 <th>Local</th>
                                 <th>Ações</th>
@@ -176,8 +186,6 @@ const Ocorrencias = () => {
                                             <i className={`fa-solid ${item.icone_classe} ${styles.iconRed}`}></i>
                                             {item.tipo_ocorrencia}
                                         </td>
-                                        {/* --- NOVA COLUNA BODY --- */}
-                                        {/* Exibe Data formatada PT-BR */}
                                         <td>{new Date(item.data_hora).toLocaleDateString('pt-BR')}</td>
                                         
                                         <td>
