@@ -15,6 +15,9 @@ import Ajustes from './pages/Ajustes/Ajustes';
 import DetalhesOcorrencia from './pages/DetalhesOcorrencia/DetalhesOcorrencia';
 
 function App() {
+  // ID do Perfil de Administrador (baseado no seu banco de dados SQL)
+  const ROLE_ADMIN = 1;
+
   return (
     <BrowserRouter>
       <Routes>
@@ -54,11 +57,12 @@ function App() {
           } 
         />
 
-        {/* Gestão de Usuários */}
+        {/* --- ROTA RESTRITA (Apenas Admin) --- */}
+        {/* Esta é a única rota que recebe a prop 'allowedRoles' */}
         <Route 
           path="/usuarios" 
           element={
-            <PrivateRoute>
+            <PrivateRoute allowedRoles={[ROLE_ADMIN]}>
               <Usuarios />
             </PrivateRoute>
           } 
