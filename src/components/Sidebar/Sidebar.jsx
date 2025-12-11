@@ -1,22 +1,29 @@
+// components/Sidebar/Sidebar.jsx
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 import '../../styles/global.css';
 
 const Sidebar = () => {
   const location = useLocation();
-  
+
   // 1. Pegar dados do usuário logado
   const user = JSON.parse(localStorage.getItem('user'));
+  // Se o usuário não existir (ex: erro de login), define null para evitar quebra
   const userProfileId = user ? user.perfil : null;
 
-  // IDs de Perfil
+  // IDs de Perfil (Conforme seu banco SQL: 1 = Admin)
   const ROLE_ADMIN = 1;
 
-  // 2. Definir itens de navegação
+  // 2. Função de Logout (Faltava esta parte)
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+  };
+
+  // 3. Definir itens de navegação
   const navItems = [
-    { to: '/', icon: 'fa-house', label: 'Ocorrências' }, // Acesso: Todos
-    { to: '/dashboard', icon: 'fa-chart-line', label: 'Dashboard' }, // Acesso: Todos
-    { to: '/relatorios', icon: 'fa-file-lines', label: 'Relatórios' }, // Acesso: Todos
+    { to: '/', icon: 'fa-house', label: 'Ocorrências' },
+    { to: '/dashboard', icon: 'fa-chart-line', label: 'Dashboard' },
+    { to: '/relatorios', icon: 'fa-file-lines', label: 'Relatórios' },
     
     // Acesso: Apenas ADMIN (ID 1)
     { 
@@ -27,21 +34,27 @@ const Sidebar = () => {
       allowed: [ROLE_ADMIN] 
     },
     
-    { to: '/auditoria', icon: 'fa-magnifying-glass', label: 'Auditoria' }, 
-    { to: '/ajustes', icon: 'fa-gear', label: 'Ajustes' }, 
+    { to: '/auditoria', icon: 'fa-magnifying-glass', label: 'Auditoria' },
+    { to: '/ajustes', icon: 'fa-gear', label: 'Ajustes' },
   ];
 
   return (
     <aside className={styles.sidebar}>
-      {/* ... Header do Sidebar ... */}
-      
+      {/* Header com Logo */}
+      <div className={styles.sidebarHeader}>
+        <img
+          src="https://i.postimg.cc/28YgB6z9/Gemini-Generated-Image-tr1uhatr1uhatr1u-8.png"
+          alt="Logo"
+          className={styles.logo}
+        />
+      </div>
+
       <nav className={styles.sidebarNav}>
         <ul>
           {navItems.map((item) => {
             // Lógica de Bloqueio Visual:
-            // Se o item for restrito E o perfil do usuário NÃO estiver na lista de permitidos, não renderiza nada.
             if (item.restricted && !item.allowed.includes(userProfileId)) {
-              return null;
+              return null; // Não renderiza o botão se não tiver permissão
             }
 
             return (
@@ -57,7 +70,13 @@ const Sidebar = () => {
           })}
         </ul>
       </nav>
-      {/* ... Footer do Sidebar ... */}
+
+      {/* Footer com Logout Funcional */}
+      <div className={styles.sidebarFooter}>
+        <Link to="/login" onClick={handleLogout}>
+          <i className="fa-solid fa-right-from-bracket"></i> <span>Sair</span>
+        </Link>
+      </div>
     </aside>
   );
 };
