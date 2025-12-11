@@ -40,7 +40,7 @@
 /* --- Cartões de Status --- */
 .statsSection {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
   margin-bottom: 30px;
 }
@@ -78,6 +78,9 @@
 }
 .pendentes .count {
   background: #f1c40f;
+}
+.andamento .count {
+  background: #e67e22; 
 }
 .cancelados .count {
   background: #e74c3c;
@@ -172,21 +175,22 @@
 }
 
 /* --- Responsividade --- */
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
   .statsSection {
-    grid-template-columns: repeat(2, 1fr); /* 2x2 em telas menores */
+    /* Em telas médias, quebra para 3 colunas em cima e 2 embaixo */
+    grid-template-columns: repeat(3, 1fr); 
   }
+}
+
+@media (max-width: 900px) {
+    .statsSection {
+      grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 600px) {
   .statsSection {
-    grid-template-columns: 1fr; /* 1 coluna em telas pequenas */
+    grid-template-columns: 1fr;
   }
-  .filtersSection {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .btnFilter {
-    margin-left: 0;
-  }
+  /* ... */
 }
