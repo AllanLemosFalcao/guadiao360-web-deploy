@@ -52,23 +52,35 @@ const Ocorrencias = () => {
         const tableParams = new URLSearchParams();
         const statsParams = new URLSearchParams();
 
+        // Filtro de Status (Aplica apenas na tabela, pois os cards mostram todos os status)
         if (filtroStatus) tableParams.append('status', filtroStatus);
+
+        // Filtro de Região (Aplica na tabela e nos cards)
         if (filtroRegiao) {
             tableParams.append('regiao', filtroRegiao);
             statsParams.append('regiao', filtroRegiao);
         }
 
+        // Filtro de Período (CORREÇÃO: Agora aplica na tabela E nos cards)
         const { inicio, fim } = calcularDatas(filtroPeriodo);
         if (inicio && fim) {
+            // Parâmetros para a tabela
             tableParams.append('dataInicio', inicio);
             tableParams.append('dataFinal', fim);
+            
+            // --- CORREÇÃO AQUI ---
+            // Parâmetros para os cards (índices)
+            statsParams.append('dataInicio', inicio);
+            statsParams.append('dataFinal', fim);
         }
 
+        // Busca dados da Tabela
         fetch(`${API_URL}/api/ocorrencias?${tableParams.toString()}`)
             .then(response => response.json())
             .then(data => setOccurrenceData(data))
             .catch(error => console.error("Erro ocorrencias:", error));
             
+        // Busca dados dos Cards (Stats)
         fetch(`${API_URL}/api/ocorrencias/stats?${statsParams.toString()}`)
             .then(response => response.json())
             .then(data => setStatsData(data))
